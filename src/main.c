@@ -191,6 +191,8 @@ int8_t gettemp(uint16_t raw) {
 /*********************************************/
 int main()
 {
+    uint8_t  elapsed = 0;
+
     // SETUP
     // set photoresistor & ntc pins to open-drain output
     P1M1 |= (1<<6) | (1<<7);
@@ -330,7 +332,16 @@ int main()
             flash_01 = 0;
             flash_23 = 0;
 
-            dmode=M_NORMAL;
+            // Alternate between Time and Temperature display.
+            if (dmode == M_NORMAL && elapsed > 10*10)
+            {
+                dmode = M_TEMP_DISP;
+                elapsed = 0;
+            } else if (dmode == M_TEMP_DISP && elapsed > 3*10)
+            {
+                dmode = M_NORMAL;
+                elapsed = 0;
+            }
 
             if (S1_PRESSED) { kmode = K_WAIT_S1; lmode=K_SET_HOUR; smode=K_SEC_DISP;  }
             //if (S2_PRESSED) { kmode = K_WAIT_S2; lmode=K_DEBUG;    smode=K_TEMP_DISP; }
@@ -441,6 +452,7 @@ int main()
         }
         
         count++;
+        elapsed++;
         WDT_CLEAR();
     }
 }

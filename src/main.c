@@ -130,8 +130,8 @@ void timer0_isr() __interrupt 1 __using 1
         _100us_count = 0;
         _10ms_count++;
 
-        // colon blink stuff, 500ms
-        if (_10ms_count == 50) {
+        // colon blink stuff, 1000ms
+        if (_10ms_count == 100) {
             display_colon = !display_colon;
             _10ms_count = 0;
         }
